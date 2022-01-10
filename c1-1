@@ -1,0 +1,5 @@
+#!/usr/bin/env elixir
+
+IO.puts "Perl Weekly Challenge" 
+    |> String.graphemes 
+    |> Enum.map(&if &1 === "e" do "E" else &1 end)

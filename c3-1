@@ -1,0 +1,35 @@
+#!/usr/bin/env elixir
+
+defmodule Smooth5 do
+  defp next_hamming(n, h) do
+    hamming(n, %{
+      closed: Enum.sort(h.closed ++ h.open) |> Enum.uniq,
+      open: Enum.sort(
+        Enum.map(h.open, &(&1*2)) 
+        ++ Enum.map(h.open, &(&1*3)) 
+        ++ Enum.map(h.open, &(&1*5))
+      ) |> Enum.uniq,
+    })
+  end
+
+  def hamming(n, h) when is_integer(n) do
+    if n < length(h.closed) do
+      res = Enum.at(h.closed, n)
+      if res < hd(h.open) do
+        {res, h}
+      else
+        next_hamming(n, h)
+      end
+    else
+      next_hamming(n, h)
+    end
+  end
+
+  def all_hamming(n, h) when is_integer(n) do 
+    {res, hp} = hamming(n, h)
+    IO.puts(res)
+    all_hamming(n+1, hp)
+  end
+end
+
+Smooth5.all_hamming(0, %{closed: [], open: [1]})

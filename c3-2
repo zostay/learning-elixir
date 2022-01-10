@@ -1,0 +1,41 @@
+#!/usr/bin/env elixir
+
+rows = System.argv() |> hd() |> Integer.parse() |> elem(0)
+
+defmodule Pascal do
+
+  defp next_part(n, p) do
+    case {n, p} do
+      {[], [p1 | [p2 | pn]]} -> next_part([0, p1+p2], [p2 | pn])
+      {n, [p1 | [p2 | pn]]} -> next_part(n ++ [p1+p2], [p2 | pn])
+      {n, _} -> n ++ [0]
+    end
+  end
+
+  defp next_row(row) do
+    next_part([], row)
+  end
+
+  def triangle(n) do
+    Stream.unfold({n, [0, 1, 0]}, fn
+      {0, _} -> nil
+      {n, prev_row} -> 
+        row = next_row(prev_row)
+        {prev_row, {n-1, row}}
+      _ -> raise "bad stuff"
+    end)
+  end
+
+  def print_row(row) do
+    Enum.filter(row, &(&1 != 0)) |> Enum.join(" ")
+  end
+end
+
+all_rows = Pascal.triangle(rows) |> Enum.map(&Pascal.print_row/1)
+lengths = Enum.map(all_rows, &String.length/1)
+max_length = List.last(lengths)
+
+Enum.zip(lengths, all_rows) |> Enum.map(fn
+  {n, row} -> 
+    IO.puts(String.duplicate(" ", div(max_length-n, 2)) <> row)
+end)

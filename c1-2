@@ -1,0 +1,10 @@
+#!/usr/bin/env elixir
+
+fizzbuzz = fn
+    n when rem(n, 15) == 0 -> "fizzbuzz"
+    n when rem(n, 3) == 0 -> "fizz"
+    n when rem(n, 5) == 0 -> "buzz"
+    n -> n
+end
+
+1..100 |> Enum.map(fizzbuzz) |> Enum.map(&IO.puts/1)

@@ -1,0 +1,14 @@
+#!/usr/bin/env elixir
+
+{args, _, _} = OptionParser.parse(System.argv(), strict: [to: :boolean, from: :boolean])
+
+{from_base, to_base} = case {args[:to]||false, args[:from]||false} do
+  {true, false} -> {10, 35} 
+  {false, true} -> {35, 10}
+  {_, _} -> raise "Please specify either --to or --from"
+end
+
+IO.stream() 
+|> Enum.map(&Integer.parse(&1, from_base)) 
+|> Enum.map(&Integer.to_string(elem(&1, 0), to_base)) 
+|> Enum.map(&IO.puts/1)
